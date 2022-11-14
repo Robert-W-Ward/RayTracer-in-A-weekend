@@ -3,8 +3,6 @@
 #include <limits>
 #include <memory>
 #include <cstdlib>
-#include "ray.h"
-#include "vector.h"
 
 using std::nullptr_t;
 using std::make_shared;
@@ -31,3 +29,5 @@ inline double clamp(double x, double min, double max) {
     if (x > max) return max;
     return x;
 }
+#include "ray.h"
+#include "vector.h"

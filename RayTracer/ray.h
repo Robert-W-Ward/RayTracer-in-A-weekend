@@ -1,6 +1,5 @@
 #pragma once
 #include "vector.h"
-
 class ray {
 	vec3 orig;
 	vec3 dir;
