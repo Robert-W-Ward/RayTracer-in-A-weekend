@@ -1,6 +1,6 @@
 #pragma once
 #include "common.h"
-
+#include "box.h"
 class material;
 
 struct hit_record {
@@ -17,4 +17,5 @@ struct hit_record {
 class hittable {
 public:
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec)const = 0;
+	virtual bool bounding_box(double time0, double time1, box& output)const = 0;
 };
