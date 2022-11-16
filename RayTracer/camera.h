@@ -9,7 +9,11 @@ public:
         point3 lookat,
         vec3 vup,
         double vfov, 
-       double aspect_ratio
+        double aspect_ratio,
+        double aperture,
+        double dist_to_focus,
+        double _time0,
+        double _time1
     ) {
         auto theta = degrees_to_radians(vfov);
         auto h = tan(theta / 2);
