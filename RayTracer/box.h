@@ -1,59 +1,38 @@
-#pragma once
 #include "common.h"
-class box {
+#include "aarect.h"
+#include "hittable_list.h"
+class box : public hittable {
 public:
     box() {}
-    box(const point3& a, const point3& b) { minimum = a; maximum = b; }
+    box(const point3& p0, const point3& p1, shared_ptr<material> ptr);
 
-    point3 min() const { return minimum; }
-    point3 max() const { return maximum; }
+    virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
 
-    bool hit(const ray& r, double t_min, double t_max) const {
-        for (int a = 0; a < 3; a++) {
-            auto t0 = fmin((minimum[a] - r.origin()[a]) / r.direction()[a],
-                (maximum[a] - r.origin()[a]) / r.direction()[a]);
-            auto t1 = fmax((minimum[a] - r.origin()[a]) / r.direction()[a],
-                (maximum[a] - r.origin()[a]) / r.direction()[a]);
-            t_min = fmax(t0, t_min);
-            t_max = fmin(t1, t_max);
-            if (t_max <= t_min)
-                return false;
-        }
+    virtual bool bounding_box(double time0, double time1, aabb& output_box) const override {
+        output_box = aabb(box_min, box_max);
         return true;
     }
 
-    double area() const {
-        auto a = maximum.x() - minimum.x();
-        auto b = maximum.y() - minimum.y();
-        auto c = maximum.z() - minimum.z();
-        return 2 * (a * b + b * c + c * a);
-    }
-
-    int longest_axis() const {
-        auto a = maximum.x() - minimum.x();
-        auto b = maximum.y() - minimum.y();
-        auto c = maximum.z() - minimum.z();
-        if (a > b && a > c)
-            return 0;
-        else if (b > c)
-            return 1;
-        else
-            return 2;
-    }
-
 public:
-    point3 minimum;
-    point3 maximum;
+    point3 box_min;
+    point3 box_max;
+    hittable_list sides;
 };
 
-box surrounding_box(box box0, box box1) {
-    vec3 small(fmin(box0.min().x(), box1.min().x()),
-        fmin(box0.min().y(), box1.min().y()),
-        fmin(box0.min().z(), box1.min().z()));
+box::box(const point3& p0, const point3& p1, shared_ptr<material> ptr) {
+    box_min = p0;
+    box_max = p1;
 
-    vec3 big(fmax(box0.max().x(), box1.max().x()),
-        fmax(box0.max().y(), box1.max().y()),
-        fmax(box0.max().z(), box1.max().z()));
+    sides.add(make_shared<xy_rect>(p0.x(), p1.x(), p0.y(), p1.y(), p1.z(), ptr));
+    sides.add(make_shared<xy_rect>(p0.x(), p1.x(), p0.y(), p1.y(), p0.z(), ptr));
 
-    return box(small, big);
+    sides.add(make_shared<xz_rect>(p0.x(), p1.x(), p0.z(), p1.z(), p1.y(), ptr));
+    sides.add(make_shared<xz_rect>(p0.x(), p1.x(), p0.z(), p1.z(), p0.y(), ptr));
+
+    sides.add(make_shared<yz_rect>(p0.y(), p1.y(), p0.z(), p1.z(), p1.x(), ptr));
+    sides.add(make_shared<yz_rect>(p0.y(), p1.y(), p0.z(), p1.z(), p0.x(), ptr));
+}
+
+bool box::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+    return sides.hit(r, t_min, t_max, rec);
 }

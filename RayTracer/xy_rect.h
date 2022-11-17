@@ -4,16 +4,16 @@ class xy_rect:public hittable
 {
 public:
     std::shared_ptr<material> mp;
-    double x0, x1, y0, y1, k;
+    double x0 = 0, x1 = 0, y0 = 0, y1 = 0, k = 0;
 
-	xy_rect() {};
+	inline xy_rect() {};
     xy_rect(double _x0, double _x1, double _y0, double _y1, double _k,std::shared_ptr<material> mat)
         : x0(_x0), x1(_x1), y0(_y0), y1(_y1), k(_k), mp(mat) {};
 
     virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
 
-    virtual bool bounding_box(double time0, double time1, box& output_box) const override {
-        output_box = box(point3(x0, y0, k - 0.0001), point3(x1, y1, k + 0.0001));
+    virtual bool bounding_box(double time0, double time1, aabb& output_box) const override {
+        output_box = aabb(point3(x0, y0, k - 0.0001), point3(x1, y1, k + 0.0001));
         return true;
     }
 

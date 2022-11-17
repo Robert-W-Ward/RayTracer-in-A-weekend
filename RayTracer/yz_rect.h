@@ -9,16 +9,16 @@ public:
 
     virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
 
-    virtual bool bounding_box(double time0, double time1, box& output_box) const override {
+    virtual bool bounding_box(double time0, double time1, aabb& output_box) const override {
         // The bounding box must have non-zero width in each dimension, so pad the X
         // dimension a small amount.
-        output_box = box(point3(k - 0.0001, y0, z0), point3(k + 0.0001, y1, z1));
+        output_box = aabb(point3(k - 0.0001, y0, z0), point3(k + 0.0001, y1, z1));
         return true;
     }
 
 public:
     std::shared_ptr<material> mp;
-    double y0, y1, z0, z1, k;
+    double y0=0, y1=0, z0=0, z1=0, k=0;
 };
 bool yz_rect::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
     auto t = (k - r.origin().x()) / r.direction().x();

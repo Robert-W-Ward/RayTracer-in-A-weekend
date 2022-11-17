@@ -2,7 +2,7 @@
 #include "hittable.h"
 #include <memory>
 #include <vector>
-#include "box.h"
+#include "aabb.h"
 
 using std::shared_ptr;
 using std::make_shared;
@@ -19,7 +19,7 @@ class hittable_list :public hittable {
 		virtual bool hit(
 			const ray& r, double t_min, double t_max, hit_record& rec) const override;
         virtual bool bounding_box(
-            double time0, double time1, box& output)const override;
+            double time0, double time1, aabb& output)const override;
 };
 bool hittable_list::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
     hit_record temp_rec;
@@ -36,10 +36,10 @@ bool hittable_list::hit(const ray& r, double t_min, double t_max, hit_record& re
 
     return hit_anything;
 }
-bool hittable_list::bounding_box(double time0, double time1, box& output)const {
+bool hittable_list::bounding_box(double time0, double time1, aabb& output)const {
     if (objects.empty()) return false;
 
-    box temp_box;
+    aabb temp_box;
     bool first_box = true;
 
     for (const auto& object : objects) {

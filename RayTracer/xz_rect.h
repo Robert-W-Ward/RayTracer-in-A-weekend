@@ -1,7 +1,7 @@
 #include "hittable.h"
 class xz_rect : public hittable {
 public:
-    xz_rect() {}
+    inline xz_rect(){}
 
     xz_rect(double _x0, double _x1, double _z0, double _z1, double _k,
         std::shared_ptr<material> mat)
@@ -9,14 +9,14 @@ public:
 
     virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
 
-    virtual bool bounding_box(double time0, double time1, box& output_box) const override {
-        output_box = box(point3(x0, k - 0.0001, z0), point3(x1, k + 0.0001, z1));
+    virtual bool bounding_box(double time0, double time1, aabb& output_box) const override {
+        output_box = aabb(point3(x0, k - 0.0001, z0), point3(x1, k + 0.0001, z1));
         return true;
     }
 
 public:
     std::shared_ptr<material> mp;
-    double x0, x1, z0, z1, k;
+    double x0 = 0, x1 = 0, z0 = 0, z1 = 0, k = 0;
 };
 bool xz_rect::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
     auto t = (k - r.origin().y()) / r.direction().y();

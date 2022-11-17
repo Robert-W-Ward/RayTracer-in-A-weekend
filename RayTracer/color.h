@@ -1,14 +1,16 @@
 #pragma once
 #include "vector.h"
-
+#include <sstream>
 #include<iostream>
 extern double clamp(double x,double min,double max);
+
+
+
 void write_color(std::ostream& out, color pixel_color, int samples_per_pixel) {
     auto r = pixel_color.x();
     auto g = pixel_color.y();
     auto b = pixel_color.z();
 
-    // Divide the color by the number of samples.
     auto scale = 1.0 / samples_per_pixel;
     r = std::sqrt(scale*r);
     g = std::sqrt(scale*g);

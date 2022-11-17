@@ -14,14 +14,14 @@ class sphere :public hittable {
 
 	public:
 		point3 center;
-		double radius;
+		double radius = 0.0;
 		std::shared_ptr<material> mat_ptr;
-		sphere() {}
+		inline sphere();
 		sphere(point3 cen, double r, shared_ptr<material> m)
 			: center(cen), radius(r), mat_ptr(m) {};
 
 		virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec)const override;
-		virtual bool bounding_box(double time0, double time1, box& output)const override;
+		virtual bool bounding_box(double time0, double time1, aabb& output)const override;
 };
 bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec)const {
 	vec3 oc = r.origin() - center;
@@ -49,7 +49,7 @@ bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec)const
 	rec.mat_ptr = mat_ptr;
 	return true;
 }
-bool sphere::bounding_box(double time0, double time1, box& output)const {
-	output = box(center - vec3(radius, radius, radius), center + vec3(radius, radius, radius));
+bool sphere::bounding_box(double time0, double time1, aabb& output)const {
+	output = aabb(center - vec3(radius, radius, radius), center + vec3(radius, radius, radius));
 	return true;
 }
