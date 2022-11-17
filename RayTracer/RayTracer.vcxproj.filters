@@ -59,5 +59,11 @@
     <ClInclude Include="xy_rect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="xz_rect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="yz_rect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

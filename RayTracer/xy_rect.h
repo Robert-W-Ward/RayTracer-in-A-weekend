@@ -1,4 +1,3 @@
-#include "common.h"
 #include "hittable.h"
 
 class xy_rect:public hittable
