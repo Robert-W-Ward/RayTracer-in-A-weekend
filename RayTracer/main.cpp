@@ -1,3 +1,10 @@
+/////////////////////////////////////////
+//Adapted from 
+// “Ray Tracing in One Weekend.” raytracing.github.io/books/RayTracingInOneWeekend.html
+// (accessed 11.18, 2022)
+// My version has phenomenally fewer features and is worse in almost every way 
+// BUT it is multithreaded so thats cool
+/////////////////////////////////////////
 #pragma once
 #include <iostream>
 #include <fstream>
@@ -46,23 +53,23 @@ hittable_list createScene() {
     auto green = make_shared<lambertian>(color(.12, .45, .15));
     auto Light = make_shared<diffuse_light>(color(15, 15, 15));
     auto darkgrey = make_shared<lambertian>(color(.75, .75, .75));
-    auto lightgrey = make_shared<lambertian>(color(.25, .25, .25));
-    auto glass = make_shared<dielectric>(1.2);
-
-    //objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, darkgrey));
-    //objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, darkgrey));
-    //objects.add(make_shared<xz_rect>(113, 443, 127, 432, 554, Light));
+    auto _lightgrey = make_shared<lambertian>(color(.25, .25, .25));
+    auto _glass = make_shared<dielectric>(1.2);
+    auto _metal = make_shared<metal>(color(0, 0, 1), 1);
+    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 555, darkgrey));
+    objects.add(make_shared<yz_rect>(0, 555, 0, 555, 0, darkgrey));
+    objects.add(make_shared<xz_rect>(113, 443, 127, 432, 554, Light));
     objects.add(make_shared<xz_rect>(0, 555, 0, 555, 0, red)); // floor
-    //objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, blue));//ceiling
-    //objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, lightgrey));
+    objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, blue));//ceiling
+    objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, _lightgrey));
 
     shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
     box1 = make_shared <rotate_y>(box1, 15);
     box1 = make_shared<translate>(box1, vec3(265, 0, 295));
     objects.add(box1);
 
-    //shared_ptr<sphere> sphere1 = make_shared<sphere>(point3(278, 278, 0),200,green);
-    objects.add(make_shared<sphere>(point3(300,200,50),50,glass));
+    objects.add(make_shared<sphere>(point3(300,200,50),50,_glass));
+    objects.add(make_shared<sphere>(point3(400, 200, 75), 25, _metal));
 
     return objects;
 
@@ -174,7 +181,7 @@ int main() {
         world = createScene();
         aspect_ratio = 1.0;
         image_width = 500;
-        samples_per_pixel = 200;
+        samples_per_pixel = 3200;
         background = color(0.5, 0.5, 0.5);
         //lookfrom = point3(0, 5, 15);
         //lookat = point3(0, 0, 0);
@@ -195,6 +202,7 @@ int main() {
     for (int j = image_height - 1; j >= 0; --j) {
         std::cerr << "\rScanlines remaining: " << j << ' '<< std::flush;
         for (int i = 0; i < image_width; ++i) {
+            //this speeds up renders by like 5x
             futures.push_back(std::async(std::launch::async, getColor,i,j,samples_per_pixel,image_width,image_height,cam,background,world,max_depth));
         }
     }

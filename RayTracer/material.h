@@ -4,19 +4,22 @@
 #include "texture.h"
 class material {
 	public:
+		static int materialCnt;
 		virtual color emitted(double u, double v, const point3& p)const {
 			return color(0, 0, 0);
 		}
-
-		virtual bool scatter(
-			const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
-		)const = 0;
+		virtual bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)const = 0;
 };
 class lambertian : public material {
 	public:
+		lambertian(const lambertian&) {
+			materialCnt++;
+			std::cout << "Material Copied! Copy count: " << materialCnt;
+		}
+
 		shared_ptr<texture> albedo;
-		lambertian(const color& a) : albedo(make_shared<solid_color>(a)) {}
-		lambertian(shared_ptr<texture> a) : albedo(a) {}
+		inline lambertian(const color& a) : albedo(make_shared<solid_color>(a)) {};
+		inline lambertian(shared_ptr<texture> a) : albedo(a) {};
 		virtual bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)const override {
 			auto scatter_direction = rec.normal + random_unit_vector();
 
@@ -27,14 +30,16 @@ class lambertian : public material {
 			attenuation = albedo->value(rec.u, rec.v, rec.p);
 			return true;
 		}
+		
 };
 class metal : public material {
 public:
+	metal(const metal& other) {
+		materialCnt++;
+		std::cout << "Material Copied! Copy count: " << materialCnt;
+	}
 	metal(const color& a,double f) : albedo(a),fuzz(f<1?f:1) {}
-
-	virtual bool scatter(
-		const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
-	) const override {
+	virtual bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override {
 		vec3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
 		scattered = ray(rec.p, reflected+fuzz*random_in_unit_sphere());
 		attenuation = albedo;
@@ -47,8 +52,12 @@ public:
 };
 class dielectric : public material {
 public:
-	dielectric(double index_of_refraction) : ir(index_of_refraction) {}
+	dielectric(const dielectric& other) {
+		materialCnt++;
+		std::cout << "Material Copied! Copy count: " << materialCnt;
+	}
 
+	dielectric(double index_of_refraction) : ir(index_of_refraction) {}
 	virtual bool scatter(
 		const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
 	) const override {
@@ -84,11 +93,14 @@ private:
 };
 class diffuse_light :public material {
 	public:
-
+		diffuse_light(const diffuse_light&) {
+			materialCnt++;
+			std::cout << "Material Copied! Copy count: " << materialCnt;
+		}
 		shared_ptr<texture>emit;
 
-		diffuse_light(shared_ptr<texture> a):emit(a){}
-		diffuse_light(color c):emit(make_shared<solid_color>(c)){}
+		inline diffuse_light(shared_ptr<texture> a):emit(a){}
+		inline diffuse_light(color c):emit(make_shared<solid_color>(c)){}
 
 		virtual bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)const override {
 			return false;
