@@ -118,6 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <Optimization>Full</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,13 +129,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="aabb.cpp" />
+    <ClCompile Include="bvh.cpp" />
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="color.cpp" />
+    <ClCompile Include="cube.cpp" />
+    <ClCompile Include="hittable.cpp" />
+    <ClCompile Include="hittable_list.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="material.cpp" />
+    <ClCompile Include="ray.cpp" />
+    <ClCompile Include="rect.cpp" />
+    <ClCompile Include="sphere.cpp" />
+    <ClCompile Include="vector.cpp" />
     <ClCompile Include="vector.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
-    <ClInclude Include="aarect.h" />
-    <ClInclude Include="box.h" />
+    <ClInclude Include="cube.h" />
     <ClInclude Include="bvh.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="color.h" />
@@ -143,11 +155,9 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="ray.h" />
+    <ClInclude Include="rect.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="texture.h" />
-    <ClInclude Include="xy_rect.h" />
-    <ClInclude Include="xz_rect.h" />
-    <ClInclude Include="yz_rect.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

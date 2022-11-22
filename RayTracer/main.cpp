@@ -5,21 +5,17 @@
 // My version has phenomenally fewer features and is worse in almost every way 
 // BUT it is multithreaded so thats cool
 /////////////////////////////////////////
-#pragma once
 #include <iostream>
-#include <fstream>
 #include <future>
-#include <chrono>
-#include "common.h"
-#include "camera.h"
+#include <fstream>
+#include "ray.h"
 #include "color.h"
 #include "hittable_list.h"
-#include "sphere.h"
-#include "aabb.h"
-#include "box.h"
 #include "material.h"
-#include "bvh.h"
-
+#include "sphere.h"
+#include "cube.h"
+#include "rect.h"
+#include "camera.h"
 //+x -->, +y^^^ +zoutOfScreen
 //-x <--  -yvvv -zintoScreen
 
@@ -63,7 +59,7 @@ hittable_list createScene() {
     objects.add(make_shared<xz_rect>(0, 555, 0, 555, 555, blue));//ceiling
     objects.add(make_shared<xy_rect>(0, 555, 0, 555, 555, _lightgrey));
 
-    shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
+    shared_ptr<hittable> box1 = make_shared<cube>(point3(0, 0, 0), point3(165, 330, 165), white);
     box1 = make_shared <rotate_y>(box1, 15);
     box1 = make_shared<translate>(box1, vec3(265, 0, 295));
     objects.add(box1);
@@ -181,7 +177,7 @@ int main() {
         world = createScene();
         aspect_ratio = 1.0;
         image_width = 500;
-        samples_per_pixel = 3200;
+        samples_per_pixel = 1000;
         background = color(0.5, 0.5, 0.5);
         //lookfrom = point3(0, 5, 15);
         //lookat = point3(0, 0, 0);

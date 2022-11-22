@@ -1,5 +1,5 @@
-#pragma once
-#include "common.h"
+#ifndef TEXTURE_H
+#define TEXTURE_H
 
 class texture {
 	public:
@@ -39,3 +39,4 @@ class checker_texture : public texture {
                 return even->value(u, v, p);
         }
 };
+#endif // !TEXTURE_H

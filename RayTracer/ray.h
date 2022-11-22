@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RAY_H
+#define RAY_H
 #include "vector.h"
 class ray {
 	vec3 orig;
@@ -6,13 +7,11 @@ class ray {
 
 public:
 	ray() {}
-	ray(const point3& origin,const vec3& direction):orig(origin),dir(direction){}
+	ray(const point3& origin, const vec3& direction);
 
-	vec3 origin() const { return orig; }
-	vec3 direction() const { return dir; }
+	vec3 origin() const;
+	vec3 direction() const;
 
-	point3 at(double t)const {
-		return orig + t * dir;
-	}
+	point3 at(double t)const;
 };
-
+#endif // !RAY_H
